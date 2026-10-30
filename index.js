@@ -1,20 +1,24 @@
-const { __esModule } = require("@babel/generator");
+import express from "express";
+import helmet from "helmet";
 
-function isPrime (num) {
-    let divisors = 0;
-    for (let i=1; i<=num; i++) {
-        if (num % i == 0 ) {
-            divisors++
-        }
-        
-    }
-    if (divisors <= 2 && !(num < 2) ) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-module.exports = {
-    isPrime
-}
+
+import authRoutes from "./routes/auth.js";
+import watchlistRoutes from "./routes/watchlist.js";
+
+const PORT = process.env.PORT || 3000;
+const app = express();
+
+app.use(helmet());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Family Movie Watchlist API");
+});
+
+app.use("/api/auth", authRoutes);
+
+app.use("/api/watchlist", watchlistRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}...`);
+});
